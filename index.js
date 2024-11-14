@@ -40,28 +40,17 @@ app.get("/auth/google/callback", async (req, res) => {
     console.debug("tokens", tokens);
     oauth2Client.setCredentials(tokens);
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 
   res.sendStatus(200);
 });
 
+app.get("/drive", async (req, res) => {
+  const drive = google.drive('v2');
+  console.debug(await drive.files.list());
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Ready at ${APP_ENDPOINT}`);
 });
-
-
-// 4. Lấy thông tin người dùng
-async function getUserInfo(access_token) {
-  const response = await fetch(
-    "https://www.googleapis.com/oauth2/v2/userinfo",
-    {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    }
-  );
-
-  const data = await response.json();
-  return data;
-}
